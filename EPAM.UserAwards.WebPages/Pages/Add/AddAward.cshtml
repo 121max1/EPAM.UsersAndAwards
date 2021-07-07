@@ -1,0 +1,29 @@
+﻿@using System;
+@using EPAM.UsersAndAwards.BLL.Interfaces;
+@using EPAM.UsersAndAwards.Common.Dependencies;
+@using EPAM.UsersAndAwards.Common.Entities;
+@using Microsoft.Extensions.DependencyInjection;
+@using System.Linq;
+@{
+    Layout = "~/Pages/Layout/_BasicLayout.cshtml";
+    var awardService = DependenciesResolver.Kernel.GetService<IAwardService>();
+    if(IsPost && Request["inputAward"].Length!=0)
+    {
+        string name = Request["inputAward"];
+        awardService.Add(new Award(Guid.NewGuid(), name));
+    }
+    else if (IsPost)
+    {
+        Response.Redirect("~/Pages/ErrorPage.cshtml");
+    }
+
+}
+<h1>Add award</h1>
+
+<form method="post">
+    <div class="form-group">
+        <label for="inputAward">Tittle</label>
+        <input  name ="inputAward" type="text" class="form-control" id="inputAward" placeholder="Enter tittle">
+    </div>
+    <button type="submit" class="btn btn-primary">Add</button>
+</form>

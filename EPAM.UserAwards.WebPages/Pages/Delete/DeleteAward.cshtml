@@ -1,0 +1,52 @@
+﻿@using System;
+@using EPAM.UsersAndAwards.BLL.Interfaces;
+@using EPAM.UsersAndAwards.Common.Dependencies;
+@using EPAM.UsersAndAwards.Common.Entities;
+@using Microsoft.Extensions.DependencyInjection;
+@{
+    Layout = "~/Pages/Layout/_BasicLayout.cshtml";
+    var awardService = DependenciesResolver.Kernel.GetService<IAwardService>();
+    var listAwardsId = awardService.GetAll().Select(a => a.ID);
+    if (IsPost && Request["IdAward"].Length != 0)
+    {
+        Guid guidChosenAward = Guid.Parse(Request["IdAward"]);
+        awardService.Delete(new Award(guidChosenAward,""));
+    }
+    else if (IsPost)
+    {
+        Response.Redirect("~/Pages/ErrorPage.cshtml");
+    }
+}
+
+<script>
+    $(document).ready(function () {
+        $(".dropdown-toggle").dropdown();
+    });
+</script>
+
+<script>
+    function SetAwardId(id) {
+        document.getElementById('inputIdAward').value = id;
+    }
+</script>>
+<h1>Delete Award</h1>
+AwardId:
+<div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        AwardsId
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+        @foreach (var id in listAwardsId)
+        {
+            <button onclick="SetAwardId('@id')" id="@id" class="dropdown-item" type="button">@id</button>
+        }   
+    </div>
+</div>
+
+<form method="post">
+    <div class="form-group">
+        <label for="inputAgeUser">IdAward</label>
+        <input name="IdAward" type="text" class="form-control" id="inputIdAward" placeholder="Enter IdAward">
+    </div>
+    <button type="submit" class="btn btn-primary">Delete</button>
+</form>

@@ -1,0 +1,52 @@
+﻿@using System;
+@using EPAM.UsersAndAwards.BLL.Interfaces;
+@using EPAM.UsersAndAwards.Common.Dependencies;
+@using EPAM.UsersAndAwards.Common.Entities;
+@using Microsoft.Extensions.DependencyInjection;
+@{
+    Layout = "~/Pages/Layout/_BasicLayout.cshtml";
+    var userService = DependenciesResolver.Kernel.GetService<IUserService>();
+    var listUsersId = userService.GetAll().Select(a => a.ID);
+    if (IsPost && Request["IdUser"].Length != 0)
+    {
+        Guid guidChosenUser = Guid.Parse(Request["IdUser"]);
+        userService.Delete(new User(guidChosenUser,"", DateTime.Now, 0));
+    }
+    else if (IsPost)
+    {
+        Response.Redirect("~/Pages/ErrorPage.cshtml");
+    }
+}
+
+<script>
+    $(document).ready(function () {
+        $(".dropdown-toggle").dropdown();
+    });
+</script>
+
+<script>
+    function SetUserId(id) {
+        document.getElementById('inputIdUser').value = id;
+    }
+</script>>
+<h1>Delete User</h1>
+UserId:
+<div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        UsersId
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+        @foreach (var id in listUsersId)
+        {
+            <button onclick="SetUserId('@id')" id="@id" class="dropdown-item" type="button">@id</button>
+        }
+    </div>
+</div>
+
+<form method="post">
+    <div class="form-group">
+        <label for="inputAgeUser">IdUser</label>
+        <input name="IdUser" type="text" class="form-control" id="inputIdUser" placeholder="Enter IdUser">
+    </div>
+    <button type="submit" class="btn btn-primary">Delete</button>
+</form>

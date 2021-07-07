@@ -1,0 +1,87 @@
+﻿@using System;
+@using EPAM.UsersAndAwards.BLL.Interfaces;
+@using EPAM.UsersAndAwards.Common.Dependencies;
+@using EPAM.UsersAndAwards.Common.Entities;
+@using Microsoft.Extensions.DependencyInjection;
+@using System.Linq;
+@{
+
+    Layout = "~/Pages/Layout/_BasicLayout.cshtml";
+    var userService = DependenciesResolver.Kernel.GetService<IUserService>();
+    var awardService = DependenciesResolver.Kernel.GetService<IAwardService>();
+    var userAwardService = DependenciesResolver.Kernel.GetService<IUserAwardService>();
+
+    var listUsersId = userService.GetAll().Select(u => u.ID);
+    var listAwardsId = awardService.GetAll().Select(a => a.ID);
+
+    if (IsPost && Request["IdUser"].Length != 0 && Request["IdAward"].Length != 0)
+    {
+        Guid guidChosenUser = Guid.Parse(Request["IdUser"]);
+        Guid guidChosenAward = Guid.Parse(Request["IdAward"]);
+        userAwardService.Add(guidChosenUser, guidChosenAward);
+    }
+    else if (IsPost)
+    {
+        Response.Redirect("~/Pages/ErrorPage.cshtml");
+    }
+}
+
+<script>
+    $(document).ready(function () {
+        $(".dropdown-toggle").dropdown();
+    });
+</script>
+<script>
+    function SetUserId(id) {
+        document.getElementById('inputIdUser').value = id;
+    }
+</script>
+
+<script>
+    function SetAwardId(id) {
+        document.getElementById('inputIdAward').value = id;
+    }
+</script>
+
+<h1>Add UserAward</h1>
+UsedId:
+<div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        UsersId
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+        @foreach (var id in listUsersId)
+        {
+            <button id="@id" onclick="SetUserId('@id')" class="dropdown-item" type="button">@id</button>
+        }
+    </div>
+</div>
+AwardId:
+<div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        AwardsId
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+        @foreach (var id in listAwardsId)
+        {
+            <button onclick="SetAwardId('@id')" id="@id" class="dropdown-item" type="button">@id</button>
+        }
+    </div>
+</div>
+
+<br />
+<br />
+
+<form method="post">
+    <div class="form-group">
+        <label for="inputDateOfBirth">IdUser</label>
+        <input name="IdUser" type="text" class="form-control" id="inputIdUser" placeholder="Enter IdUser">
+    </div>
+    <div class="form-group">
+        <label for="inputAgeUser">IdAward</label>
+        <input name="IdAward" type="text" class="form-control" id="inputIdAward" placeholder="Enter IdAward">
+    </div>
+    <button type="submit" class="btn btn-primary">Add</button>
+</form>
+
+

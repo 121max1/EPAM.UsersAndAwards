@@ -1,0 +1,104 @@
+﻿@using System;
+@using EPAM.UsersAndAwards.BLL.Interfaces;
+@using EPAM.UsersAndAwards.Common.Dependencies;
+@using EPAM.UsersAndAwards.Common.Entities;
+@using Microsoft.Extensions.DependencyInjection;
+@using System.Linq;
+
+@{
+    Layout = "~/Pages/Layout/_BasicLayout.cshtml";
+    var userAwardService = DependenciesResolver.Kernel.GetService<IUserAwardService>();
+    var idUsers = userAwardService.GetAll().Select(ua => ua.IdUser);
+    var idAwards = userAwardService.GetAll().Select(ua => ua.IdAward);
+
+    if (IsPost && Request["IdAward"]!=null)
+    {
+        try
+        {
+
+
+            Guid guidChosenAward = Guid.Parse(Request["IdAward"]);
+            userAwardService.DeleteByAward(guidChosenAward);
+        }
+        catch
+        {
+            Response.Redirect("~/Pages/ErrorPage.cshtml");
+        }
+
+    }
+    if (IsPost && Request["IdUser"]!=null)
+    {
+        try
+        {
+            Guid guidChosenUser = Guid.Parse(Request["IdUser"]);
+            userAwardService.DeleteByUser(guidChosenUser);
+        }
+        catch
+        {
+            Response.Redirect("~/Pages/ErrorPage.cshtml");
+        }
+
+    }
+
+}
+
+
+<script>
+    $(document).ready(function () {
+        $(".dropdown-toggle").dropdown();
+    });
+</script>
+
+<script>
+    function SetUserId(id) {
+        document.getElementById('inputIdUser').value = id;
+    }
+</script>
+<h1>Delete by User</h1>
+UserId:
+<div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        UsersId
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+        @foreach (var id in idUsers)
+        {
+            <button onclick="SetUserId('@id')" id="@id" class="dropdown-item" type="button">@id</button>
+        }
+    </div>
+</div>
+
+<form method="post">
+    <div class="form-group">
+        <label for="inputAgeUser">IdUser</label>
+        <input name="IdUser" type="text" class="form-control" id="inputIdUser" placeholder="Enter IdUser">
+    </div>
+    <button type="submit" class="btn btn-primary">Delete</button>
+</form>
+
+<script>
+    function SetAwardId(id) {
+        document.getElementById('inputIdAward').value = id;
+    }
+</script>
+<h1>Delete by Award</h1>
+AwardId:
+<div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        AwardsId
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+        @foreach (var id in idAwards)
+        {
+            <button onclick="SetAwardId('@id')" id="@id" class="dropdown-item" type="button">@id</button>
+        }
+    </div>
+</div>
+
+<form method="post">
+    <div class="form-group">
+        <label for="inputAgeUser">IdAward</label>
+        <input name="IdAward" type="text" class="form-control" id="inputIdAward" placeholder="Enter IdAward">
+    </div>
+    <button type="submit" class="btn btn-primary">Delete</button>
+</form>

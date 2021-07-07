@@ -1,0 +1,80 @@
+﻿@using EPAM.UsersAndAwards.BLL.Interfaces;
+@using EPAM.UsersAndAwards.Common.Dependencies;
+@using EPAM.UsersAndAwards.Common.Entities;
+@using Microsoft.Extensions.DependencyInjection;
+@{
+    Layout = "~/Pages/Layout/_BasicLayout.cshtml";
+    var userService = DependenciesResolver.Kernel.GetService<IUserService>();
+    var listUsersId = userService.GetAll().Select(a => a.ID);
+
+    if (IsPost && Request["inputNameUser"].Length != 0 && int.Parse(Request["inputAgeUser"]) > 1 && Request["IdUser"].Length != 0)
+    {
+        try
+        {
+
+
+            Guid guidChosenUser = Guid.Parse(Request["IdUser"]);
+            string name = Request["inputNameUser"];
+            DateTime dateOfBirth = DateTime.Parse(Request["inputDateOfBirthUser"]);
+            int age = int.Parse(Request["inputAgeUser"]);
+            userService.Update(new User(guidChosenUser, name, dateOfBirth, age));
+        }
+        catch
+        {
+            Response.Redirect("~/Pages/ErrorPage.cshtml");
+        }
+    }
+    else if (IsPost)
+    {
+        Response.Redirect("~/Pages/ErrorPage.cshtml");
+    }
+
+}
+
+<script>
+    $(document).ready(function () {
+        $(".dropdown-toggle").dropdown();
+    });
+</script>
+
+<script>
+    function SetUserId(id) {
+        document.getElementById('inputIdUser').value = id;
+    }
+</script>>
+<h1>Edit User</h1>
+UserId:
+<div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        UsersId
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+        @foreach (var id in listUsersId)
+        {
+            <button onclick="SetUserId('@id')" id="@id" class="dropdown-item" type="button">@id</button>
+        }
+    </div>
+</div>
+
+
+<form method="post">
+    <div class="form-group">
+        <label for="inputAgeUser">IdUser</label>
+        <input name="IdUser" type="text" class="form-control" id="inputIdUser" placeholder="Enter IdAward">
+    </div>
+    <div class="form-group">
+        <label for="inputNameUser">Name</label>
+        <input name="inputNameUser" type="text" class="form-control" id="inputNameUser" placeholder="Enter Name">
+    </div>
+    <div class="form-group">
+        <label for="inputDateOfBirth">DateOfBirth</label>
+        <input name="inputDateOfBirthUser" type="date" class="form-control" id="inputDateOfBirthUser" placeholder="Enter birthday">
+    </div>
+    <div class="form-group">
+        <label for="inputAgeUser">Age</label>
+        <input name="inputAgeUser" type="number" class="form-control" id="inputAgeUser" placeholder="Enter birthday">
+    </div>
+    <button type="submit" class="btn btn-primary">
+        Edit
+    </button>
+</form>

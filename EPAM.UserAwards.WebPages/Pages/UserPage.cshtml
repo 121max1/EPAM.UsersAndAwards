@@ -1,0 +1,47 @@
+﻿@{
+    Layout = "~/Pages/Layout/_BasicLayout.cshtml";
+}
+
+@if ( User.Identity.IsAuthenticated && User.IsInRole("admin"))
+{
+<button id="addUser" type="button" class="btn btn-primary">Add user</button>
+
+<script>
+    $('#addUser').click(function () {
+        location.href = '/Pages/Add/AddUser';
+    })
+</script>
+
+<br />
+
+<button id="deleteUser" type="button" class="btn btn-primary">Delete user</button>
+
+<script>
+    $('#deleteUser').click(function () {
+        location.href = '/Pages/Delete/DeleteUser';
+    })
+</script>
+
+<br />
+
+<button id="editUser" type="button" class="btn btn-primary">Edit user</button>
+
+<script>
+    $('#editUser').click(function () {
+        location.href = '/Pages/Edit/EditUser';
+    })
+</script>
+
+<br />
+}
+
+@if (User.IsInRole("user"))
+{
+<button id="getAllUsers" type="button" class="btn btn-primary">Get all users</button>
+
+<script>
+    $('#getAllUsers').click(function () {
+        location.href = '/Pages/GetAll/GetAllUsers';
+    })
+</script>
+}

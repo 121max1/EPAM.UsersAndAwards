@@ -1,0 +1,23 @@
+﻿@{
+    Layout = "~/Pages/Layout/_BasicLayout.cshtml";
+}
+<button id="addUserAward" type="button" class="btn btn-primary">Add UserAward</button>
+
+@if (User.Identity.IsAuthenticated)
+{
+<script>
+    $('#addUserAward').click(function () {
+        location.href = '/Pages/Add/AddUserAward';
+    })
+</script>
+
+<br />
+
+<button id="deleteUserAward" type="button" class="btn btn-primary">Delete UserAward</button>
+
+<script>
+    $('#deleteUserAward').click(function () {
+        location.href = '/Pages/Delete/DeleteUserAward';
+    })
+</script>
+}

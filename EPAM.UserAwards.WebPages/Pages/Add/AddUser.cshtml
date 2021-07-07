@@ -1,0 +1,37 @@
+﻿@using System;
+@using EPAM.UsersAndAwards.BLL.Interfaces;
+@using EPAM.UsersAndAwards.Common.Dependencies;
+@using EPAM.UsersAndAwards.Common.Entities;
+@using Microsoft.Extensions.DependencyInjection;
+@{
+    Layout = "~/Pages/Layout/_BasicLayout.cshtml";
+    var userService = DependenciesResolver.Kernel.GetService<IUserService>();
+    if (IsPost && Request["inputNameUser"].Length != 0 && int.Parse(Request["inputAgeUser"]) > 1)
+    {
+        string name = Request["inputNameUser"];
+        DateTime dateOfBirth = DateTime.Parse(Request["inputDateOfBirthUser"]);
+        int age = int.Parse(Request["inputAgeUser"]);
+        userService.Add(new User(Guid.NewGuid(), name, dateOfBirth, age));
+    }
+    else if (IsPost)
+    {
+        Response.Redirect("~/Pages/ErrorPage.cshtml");
+    }
+}
+
+<h1>Add User</h1>
+<form method="post">
+    <div class="form-group">
+        <label for="inputNameUser">Name</label>
+        <input name ="inputNameUser" type="text" class="form-control" id="inputNameUser" placeholder="Enter Name">
+    </div>
+    <div class="form-group">
+        <label for="inputDateOfBirth">DateOfBirth</label>
+        <input name ="inputDateOfBirthUser" type="date" class="form-control" id="inputDateOfBirthUser" placeholder="Enter birthday">
+    </div>
+    <div class="form-group">
+        <label for="inputAgeUser">Age</label>
+        <input name ="inputAgeUser" type="number" class="form-control" id="inputAgeUser" placeholder="Enter birthday">
+    </div>
+    <button type="submit" class="btn btn-primary">Add</button>
+</form>

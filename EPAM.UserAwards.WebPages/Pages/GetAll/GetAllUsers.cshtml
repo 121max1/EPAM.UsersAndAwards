@@ -1,0 +1,28 @@
+﻿@using System;
+@using EPAM.UsersAndAwards.BLL.Interfaces;
+@using EPAM.UsersAndAwards.Common.Dependencies;
+@using EPAM.UsersAndAwards.Common.Entities;
+@using Microsoft.Extensions.DependencyInjection;
+@{
+    Layout = "~/Pages/Layout/_BasicLayout.cshtml";
+    var userService = DependenciesResolver.Kernel.GetService<IUserService>();
+    var allUsers = userService.GetAll();
+}
+<h1>All Users</h1>
+@foreach (var user in allUsers)
+{
+    <div>Id: @user.ID</div>
+    <div>Name: @user.Name</div>
+    <div>Date of birth: @user.DateOfBirth</div>
+    <div>Age: @user.Age</div>
+    if (User.IsInRole("admin"))
+    {
+        foreach (var award in user.Awards)
+        {
+        <div style="margin-left: 50px;">Award with @award.ID</div>
+        <div style="margin-left: 100px;">Title: @award.Tittle</div>
+        <hr size=3 width=500px align="left">
+        }
+    }
+    <hr size=3 width=500px align="left">
+}

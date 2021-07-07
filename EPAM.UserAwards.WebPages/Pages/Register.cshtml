@@ -1,0 +1,50 @@
+﻿@using System;
+@using EPAM.UsersAndAwards.BLL.Interfaces;
+@using EPAM.UsersAndAwards.Common.Dependencies;
+@using EPAM.UsersAndAwards.Common.Entities;
+@using Microsoft.Extensions.DependencyInjection;
+@{
+    Layout = "~/Pages/Layout/_BasicLayout.cshtml";
+    var userAuthService = DependenciesResolver.Kernel.GetService<IUserAuthService>();
+    if (IsPost)
+    {
+        var login = Request["login"];
+        var pass = Request["pass"];
+        var role = Request["role"];
+        if (role == "admin")
+        {
+            role += "|user";
+        }
+        if (Request["login"].Length != 0 && Request["pass"].Length != 0 && Request["role"].Length != 0)
+        {
+            userAuthService.Add(new UserAuth(login, pass, role));
+            Response.Redirect("/pages/signin");
+        }
+        else
+        {
+            Response.Redirect("/pages/ErrorPage");
+        }
+
+    }
+}
+
+<form method="post">
+    <div class="form-group">
+        <label for="exampleInputEmail1">Login</label>
+        <input name="login" type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter login">
+        <small id="emailHelp" class="form-text text-muted">We'll never share your login with anyone else.</small>
+    </div>
+    <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input name="pass" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+    </div>
+    <div class="form-group">
+        <label for="exampleFormControlSelect1">Role</label>
+        <select name ="role" class="form-control" id="exampleFormControlSelect1">
+            <option>user</option>
+            <option>admin</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Register</button>
+</form>

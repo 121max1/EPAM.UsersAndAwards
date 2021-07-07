@@ -1,0 +1,51 @@
+﻿@{
+    Layout = "~/Pages/Layout/_BasicLayout.cshtml";
+}
+
+@if (User.IsInRole("admin"))
+{
+<button id="addAward" type="button" class="btn btn-primary">Add Award</button>
+
+<script>
+    $('#addAward').click(function () {
+        location.href = '/Pages/Add/AddAward';
+    })
+</script>
+
+<br />
+
+<button id="deleteAward" type="button" class="btn btn-primary">Delete Award</button>
+
+<script>
+    $('#deleteAward').click(function () {
+        location.href = '/Pages/Delete/DeleteAward';
+    })
+</script>
+
+<br />
+
+<button id="editAward" type="button" class="btn btn-primary">Edit Award</button>
+
+<script>
+    $('#editAward').click(function () {
+        location.href = '/Pages/Edit/EditAward';
+    })
+</script>
+
+<br />
+}
+@if (User.IsInRole("user"))
+{
+
+<button id="getAllAwards" type="button" class="btn btn-primary">Get all Awards</button>
+
+<script>
+    $('#getAllAwards').click(function () {
+        location.href = '/Pages/GetAll/GetAllAwards';
+    })
+</script>
+}
+
+
+
+

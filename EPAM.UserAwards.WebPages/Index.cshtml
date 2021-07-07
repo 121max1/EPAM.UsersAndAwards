@@ -1,0 +1,73 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+
+    <div>
+        <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+        <script src="~/Scripts/popper.js"></script>
+        <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+
+    </div>
+    @if (User.Identity.IsAuthenticated)
+    {
+        if (User.IsInRole("user"))
+        {
+            <div>Go to User:</div>
+            <button id="userBtn" type="button" class="btn btn-primary">Go!</button>
+
+            <script>
+                $('#userBtn').click(function () {
+                    location.href = '/Pages/UserPage';
+                })
+            </script>
+            <br />
+
+            <div>Go to Award:</div>
+            <button id="awardBtn" type="button" class="btn btn-primary">Go!</button>
+
+            <br />
+            <script>
+                $('#awardBtn').click(function () {
+                    location.href = '/Pages/AwardPage';
+                })
+            </script>
+        }
+        if (User.IsInRole("admin"))
+        {
+            <div> Go to UserAward:</div>
+            <button id="userAwardBtn" type="button" class="btn btn-primary">Go!</button>
+        }
+        <script>
+            $('#userAwardBtn').click(function () {
+                location.href = '/Pages/UserAwardPage';
+            })
+        </script>
+    }
+    else
+    {
+        <button id="loginBtn" type="button" class="btn btn-warning">Login</button>
+        <script>
+            $('#loginBtn').click(function () {
+                location.href = '/pages/signin';
+            })
+        </script>
+        <button id="registerBtn" type="button" class="btn btn-warning">Register</button>
+        <script>
+            $('#registerBtn').click(function () {
+                location.href = '/pages/register';
+            })
+        </script>
+    }
+</body>
+</html>
+
+
